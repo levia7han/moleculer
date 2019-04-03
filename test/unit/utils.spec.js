@@ -35,7 +35,6 @@ describe("Test utils.getNodeID", () => {
 });
 
 describe("Test match", () => {
-
 	expect(utils.match("1.2.3", "1.2.3")).toBe(true);
 	expect(utils.match("a.b.c.d", "a.b.c.d")).toBe(true);
 	expect(utils.match("aa.bb.cc", "aa.bb.cc")).toBe(true);
@@ -109,6 +108,10 @@ describe("Test match", () => {
 	expect(utils.match("$aa.bb.cc", "**.cc")).toBe(true);
 	expect(utils.match("$aa.bb.cc", "**")).toBe(true);
 	expect(utils.match("$aa.bb.cc", "*")).toBe(false);
+
+	// Nats wildcard
+	expect(utils.match("aa.bb.cc", ">")).toBe(true);
+	expect(utils.match("a", ">")).toBe(true);
 });
 
 describe("Test utils.safetyObject", () => {
@@ -117,7 +120,7 @@ describe("Test utils.safetyObject", () => {
 		const obj = {
 			a: 5,
 			b: "Hello",
-			c: [0,1,2],
+			c: [0, 1, 2],
 			d: {
 				e: false,
 				f: 1.23
@@ -132,7 +135,7 @@ describe("Test utils.safetyObject", () => {
 		const obj = {
 			a: 5,
 			b: "Hello",
-			c: [0,1,2],
+			c: [0, 1, 2],
 			d: {
 				e: false,
 				f: 1.23
@@ -146,7 +149,7 @@ describe("Test utils.safetyObject", () => {
 		expect(res).toEqual({
 			a: 5,
 			b: "Hello",
-			c: [0,1,2],
+			c: [0, 1, 2],
 			d: {
 				e: false,
 				f: 1.23
@@ -205,7 +208,7 @@ describe("Test utils.dotSet", () => {
 		try {
 			utils.dotSet(obj, "level1.level2.level3", "?");
 			done.fail(new Error("Should have raised an error"));
-		} catch(err) {
+		} catch (err) {
 			done();
 		}
 	});

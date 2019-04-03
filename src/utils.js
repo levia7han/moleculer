@@ -6,12 +6,14 @@
 
 "use strict";
 
-const Promise 	= require("bluebird");
-const chalk		= require("chalk");
-const os 	 	= require("os");
+const Promise = require("bluebird");
+const chalk = require("chalk");
+const os = require("os");
 
 const lut = [];
-for (let i=0; i<256; i++) { lut[i] = (i<16?"0":"")+(i).toString(16); }
+for (let i = 0; i < 256; i++) {
+	lut[i] = (i < 16 ? "0" : "") + (i).toString(16);
+}
 
 const RegexCache = new Map();
 
@@ -19,7 +21,7 @@ const deprecateList = [];
 
 function circularReplacer() {
 	const seen = new WeakSet();
-	return function(key, value) {
+	return function (key, value) {
 		if (typeof value === "object" && value !== null) {
 			if (seen.has(value)) {
 				//delete this[key];
@@ -35,14 +37,14 @@ const utils = {
 
 	// Fast UUID generator: e7 https://jsperf.com/uuid-generator-opt/18
 	generateToken() {
-		const d0 = Math.random()*0xffffffff|0;
-		const d1 = Math.random()*0xffffffff|0;
-		const d2 = Math.random()*0xffffffff|0;
-		const d3 = Math.random()*0xffffffff|0;
-		return lut[d0&0xff]+lut[d0>>8&0xff]+lut[d0>>16&0xff]+lut[d0>>24&0xff]+"-"+
-			lut[d1&0xff]+lut[d1>>8&0xff]+"-"+lut[d1>>16&0x0f|0x40]+lut[d1>>24&0xff]+"-"+
-			lut[d2&0x3f|0x80]+lut[d2>>8&0xff]+"-"+lut[d2>>16&0xff]+lut[d2>>24&0xff]+
-			lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
+		const d0 = Math.random() * 0xffffffff | 0;
+		const d1 = Math.random() * 0xffffffff | 0;
+		const d2 = Math.random() * 0xffffffff | 0;
+		const d3 = Math.random() * 0xffffffff | 0;
+		return lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + "-" +
+			lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + "-" + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + "-" +
+			lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + "-" + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] +
+			lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
 	},
 
 	/**
@@ -102,7 +104,7 @@ const utils = {
 	 */
 	clearRequireCache(filename) {
 		/* istanbul ignore next */
-		Object.keys(require.cache).forEach(function(key) {
+		Object.keys(require.cache).forEach(function (key) {
 			if (key == filename) {
 				delete require.cache[key];
 			}
@@ -119,10 +121,11 @@ const utils = {
 	match(text, pattern) {
 		// Simple patterns
 		if (pattern.indexOf("?") == -1) {
+			const firstArrowPosition = pattern.indexOf('>');
+			const firstStarPosition = pattern.indexOf("*");
 
 			// Exact match (eg. "prefix.event")
-			const firstStarPosition = pattern.indexOf("*");
-			if (firstStarPosition == -1) {
+			if (firstStarPosition == -1 && firstArrowPosition == -1) {
 				return pattern === text;
 			}
 
@@ -149,6 +152,12 @@ const utils = {
 
 			// Accept all inputs (**)
 			if (len == 2 && firstStarPosition == 0 && pattern.lastIndexOf("*") == 1) {
+				return true;
+			}
+
+			// NATS wildcard match to accept all inputs
+
+			if (len == 1 && firstArrowPosition !== -1) {
 				return true;
 			}
 		}
