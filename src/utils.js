@@ -156,7 +156,6 @@ const utils = {
 			}
 
 			// NATS wildcard match to accept all inputs
-
 			if (len == 1 && firstArrowPosition !== -1) {
 				return true;
 			}

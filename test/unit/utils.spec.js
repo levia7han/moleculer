@@ -112,6 +112,8 @@ describe("Test match", () => {
 	// Nats wildcard
 	expect(utils.match("aa.bb.cc", ">")).toBe(true);
 	expect(utils.match("a", ">")).toBe(true);
+	expect(utils.match("$a", ">")).toBe(true);
+	expect(utils.match("$aa.bb.cc", ">")).toBe(true);
 });
 
 describe("Test utils.safetyObject", () => {
