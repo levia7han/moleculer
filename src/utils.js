@@ -136,6 +136,12 @@ const utils = {
 				return text.startsWith(pattern);
 			}
 
+			// Eg. "prefix.>"
+			if (len > 2 && pattern.endsWith(">") && firstArrowPosition > len - 2) {
+				pattern = pattern.substring(0, len - 1);
+				return text.startsWith(pattern);
+			}
+
 			// Eg. "prefix*"
 			if (len > 1 && pattern.endsWith("*") && firstStarPosition > len - 2) {
 				pattern = pattern.substring(0, len - 1);

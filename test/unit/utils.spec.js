@@ -114,6 +114,8 @@ describe("Test match", () => {
 	expect(utils.match("a", ">")).toBe(true);
 	expect(utils.match("$a", ">")).toBe(true);
 	expect(utils.match("$aa.bb.cc", ">")).toBe(true);
+	expect(utils.match("aa.bb.cc", "aa.bb.>")).toBe(true);
+	expect(utils.match("domain.event.for.testing", "domain.>"));
 });
 
 describe("Test utils.safetyObject", () => {
